@@ -24,7 +24,7 @@ export default function CategoriePosts() {
       <ul>
         {CategoriePosts.map((item) => {
           return (
-            <li key={item.content + item.title}>
+            <li key={item.id + item.title}>
               <h2>{item.title} </h2>
               <p>{item.content}</p>
             </li>

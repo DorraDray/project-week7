@@ -9,6 +9,7 @@ export default function Categories() {
   }, []);
 
   async function handleGetCategories() {
+    console.log("iam cold");
     const response = await fetch("http://localhost:8080/categories");
     const data = await response.json();
 

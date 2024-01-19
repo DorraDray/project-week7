@@ -8,12 +8,25 @@ export default function AddPost() {
   });
   const [passwordError, setPasswordError] = useState("");
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     console.log("Form has been submitted");
     console.log(form);
+    const formData = new FormData(event.target);
+    const formValues = Object.fromEntries(formData);
     if (form.content.length > 10) {
-      // do something like logging in the user
+      // send the joke to the API
+      const response = await fetch("http://localhost:8080/addPosts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formValues),
+      });
+      const myresponse = await response.json();
+
+      console.log(myresponse);
+
       setForm({
         title: "",
         content: "",
@@ -25,7 +38,37 @@ export default function AddPost() {
       setPasswordError("your content isn't long enough");
     }
   }
+  //   async function handleSubmit(event) {
+  //     event.preventDefault();
 
+  //     if (form.content.length > 10) {
+  //       const formData = new FormData();
+
+  //       // Append form values to FormData
+  //       Object.entries(form).forEach(([key, value]) => {
+  //         formData.append(key, value);
+  //       });
+
+  //       // send the post data to the API
+  //       const response = await fetch("http://localhost:8080/addPosts", {
+  //         method: "POST",
+  //         body: formData,
+  //       });
+
+  //       const json = await response.json();
+  //       console.log(json);
+
+  //       setForm({
+  //         title: "",
+  //         content: "",
+  //         category_id: "",
+  //       });
+  //       setPasswordError("");
+  //     } else {
+  //       // Moan about the content length
+  //       setPasswordError("Your content isn't long enough");
+  //     }
+  //   }
   function handleChange(event) {
     setForm({
       ...form, // the spread operator will add all existing values of form
@@ -48,7 +91,7 @@ export default function AddPost() {
         <input
           name="title"
           onChange={handleChange}
-          value={form.titleitle}
+          value={form.title}
           required
         />
 
@@ -61,14 +104,19 @@ export default function AddPost() {
           required
         />
 
-        <label>category</label>
-        <input
-          name="content"
-          type="text"
+        <label htmlFor="categorySelector">Select a category:</label>
+        <select
+          name="category_id"
           onChange={handleChange}
-          value={form.content}
+          value={form.category_id}
           required
-        />
+          id="categorySelector"
+        >
+          <option value="1">Technology</option>
+          <option value="2">Science</option>
+          <option value="3">Health</option>
+        </select>
+
         <p>{passwordError}</p>
 
         <button>Add Post</button>

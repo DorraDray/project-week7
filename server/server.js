@@ -7,6 +7,7 @@ dotenv.config(); // allow us to use the environment variables (like the DATABASE
 
 const PORT = 8080;
 const app = express();
+app.use(express.json());
 app.use(cors());
 
 // connect to my database
@@ -33,6 +34,22 @@ app.get("/categories/:categoryId", async (request, response) => {
     [id]
   );
   response.json(result.rows);
+});
+
+app.post("/addPosts", function (request, response) {
+  console.log(request.body);
+  const title = request.body.title;
+  const content = request.body.content;
+  const category_id = request.body.category_id;
+
+  const newPost = db.query(
+    "INSERT INTO posts (title, content,category_id) VALUES ($1, $2, $3)",
+    [title],
+    [content],
+    [category_id]
+  );
+
+  response.json(newPost);
 });
 // start my server
 app.listen(PORT, () => console.log(`App is running on PORT ${PORT}`));
