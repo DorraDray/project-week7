@@ -20,8 +20,9 @@ app.get("/", (request, response) => {
 });
 
 app.get("/posts", async (request, response) => {
-  const result = await db.query("SELECT * FROM posts");
+  const result = await db.query("SELECT * FROM posts order by id");
   response.json(result.rows);
+  console.log(result.rows);
 });
 app.get("/categories", async (request, response) => {
   const result = await db.query("SELECT * FROM categories");
@@ -30,10 +31,10 @@ app.get("/categories", async (request, response) => {
 app.get("/categories/:categoryId", async (request, response) => {
   const id = request.params.categoryId;
   const result = await db.query(
-    "SELECT posts.title, posts.content FROM posts JOIN categories ON posts.category_id = categories.id WHERE categories.id = $1",
+    "SELECT posts.title, posts.content FROM posts WHERE posts.category_id = $1",
     [id]
   );
-  response.json(result.rows[0]);
+  response.json(result.rows);
 });
 
 app.post("/addPosts", function (request, response) {
@@ -44,11 +45,22 @@ app.post("/addPosts", function (request, response) {
 
   const newPost = db.query(
     "INSERT INTO posts (title, content, category_id) VALUES ($1, $2, $3) RETURNING *",
-    [title],
-    [content],
-    [category_id]
+    [title, content, category_id]
   );
   response.json("RESPONSE");
+});
+app.post("/posts/:id/like", function (request, response) {
+  const id = request.params.id;
+  const post = db.query(
+    "UPDATE posts SET like_count = like_count + $1 WHERE id = $2 RETURNING *",
+    [1, id]
+  );
+  response.json(post);
+});
+app.delete("/posts/:id/delete", function (request, response) {
+  const id = request.params.id;
+  const post = db.query("DELETE FROM posts WHERE id = $1", [id]);
+  response.json(post);
 });
 // start my server
 app.listen(PORT, () => console.log(`App is running on PORT ${PORT}`));

@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS posts (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   content TEXT NOT NULL,
-  category_id INTEGER REFERENCES categories(id)
+  category_id INTEGER REFERENCES categories(id),
+  like_count INTEGER NOT NULL DEFAULT 0
 )
 
 CREATE TABLE IF NOT EXISTS tags (

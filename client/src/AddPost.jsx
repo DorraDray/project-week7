@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function AddPost() {
   const [form, setForm] = useState({
@@ -7,6 +7,11 @@ export default function AddPost() {
     category_id: "",
   });
   const [passwordError, setPasswordError] = useState("");
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    handleGetCategories();
+  }, []);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -38,50 +43,21 @@ export default function AddPost() {
       setPasswordError("your content isn't long enough");
     }
   }
-  //   async function handleSubmit(event) {
-  //     event.preventDefault();
+  async function handleGetCategories() {
+    console.log("iam cold");
+    const response = await fetch("http://localhost:8080/categories");
+    const data = await response.json();
 
-  //     if (form.content.length > 10) {
-  //       const formData = new FormData();
+    // set todoItems to be the response
+    setCategories(data);
+  }
 
-  //       // Append form values to FormData
-  //       Object.entries(form).forEach(([key, value]) => {
-  //         formData.append(key, value);
-  //       });
-
-  //       // send the post data to the API
-  //       const response = await fetch("http://localhost:8080/addPosts", {
-  //         method: "POST",
-  //         body: formData,
-  //       });
-
-  //       const json = await response.json();
-  //       console.log(json);
-
-  //       setForm({
-  //         title: "",
-  //         content: "",
-  //         category_id: "",
-  //       });
-  //       setPasswordError("");
-  //     } else {
-  //       // Moan about the content length
-  //       setPasswordError("Your content isn't long enough");
-  //     }
-  //   }
   function handleChange(event) {
     setForm({
       ...form, // the spread operator will add all existing values of form
       [event.target.name]: event.target.value, // then we add the new value using the form field "name" attribute and the value
     });
   }
-
-  //   function preFillForm() {
-  //     setForm({
-  //       username: "Wollivan",
-  //       password: "poop",
-  //     });
-  //   }
 
   return (
     <div>
@@ -112,9 +88,11 @@ export default function AddPost() {
           required
           id="categorySelector"
         >
-          <option value="1">Technology</option>
-          <option value="2">Science</option>
-          <option value="3">Health</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
         </select>
 
         <p>{passwordError}</p>

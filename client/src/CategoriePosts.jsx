@@ -6,15 +6,15 @@ export default function CategoriePosts() {
   const { categoryId } = useParams();
   useEffect(() => {
     handleGetCategoriePosts();
-  });
+  }, []);
 
   async function handleGetCategoriePosts() {
     const response = await fetch(
       `http://localhost:8080/categories/${categoryId}`
     );
     const data = await response.json();
-
-    // set todoItems to be the response
+    console.log(data);
+    //set todoItems to be the response
     setCategoriePosts(data);
   }
 
@@ -22,14 +22,12 @@ export default function CategoriePosts() {
     <div>
       <h1>List of Posts</h1>
       <ul>
-        {CategoriePosts.map((item) => {
-          return (
-            <li key={item.id + item.title}>
-              <h2>{item.title} </h2>
-              <p>{item.content}</p>
-            </li>
-          );
-        })}
+        {CategoriePosts.map((item) => (
+          <li key={item.id}>
+            <h2>{item.title} </h2>
+            <p>{item.content}</p>
+          </li>
+        ))}
       </ul>
     </div>
   );
