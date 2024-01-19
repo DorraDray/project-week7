@@ -33,7 +33,7 @@ app.get("/categories/:categoryId", async (request, response) => {
     "SELECT posts.title, posts.content FROM posts JOIN categories ON posts.category_id = categories.id WHERE categories.id = $1",
     [id]
   );
-  response.json(result.rows);
+  response.json(result.rows[0]);
 });
 
 app.post("/addPosts", function (request, response) {
@@ -43,13 +43,12 @@ app.post("/addPosts", function (request, response) {
   const category_id = request.body.category_id;
 
   const newPost = db.query(
-    "INSERT INTO posts (title, content,category_id) VALUES ($1, $2, $3)",
+    "INSERT INTO posts (title, content, category_id) VALUES ($1, $2, $3) RETURNING *",
     [title],
     [content],
     [category_id]
   );
-
-  response.json(newPost);
+  response.json("RESPONSE");
 });
 // start my server
 app.listen(PORT, () => console.log(`App is running on PORT ${PORT}`));
