@@ -6,7 +6,7 @@ export default function AddPost() {
     content: "",
     category_id: "",
   });
-  const [passwordError, setPasswordError] = useState("");
+  const [contentError, setContentError] = useState("");
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -21,13 +21,16 @@ export default function AddPost() {
     const formValues = Object.fromEntries(formData);
     if (form.content.length > 10) {
       // send the joke to the API
-      const response = await fetch("http://localhost:8080/addPosts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formValues),
-      });
+      const response = await fetch(
+        "https://project-week7-client.onrender.com/addPosts",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formValues),
+        }
+      );
       const myresponse = await response.json();
 
       console.log(myresponse);
@@ -37,15 +40,17 @@ export default function AddPost() {
         content: "",
         category_id: "",
       });
-      setPasswordError("");
+      setContentError("");
     } else {
-      // moan about the password
-      setPasswordError("your content isn't long enough");
+      // moan about the content
+      setContentError("your content isn't long enough");
     }
   }
   async function handleGetCategories() {
     console.log("iam cold");
-    const response = await fetch("http://localhost:8080/categories");
+    const response = await fetch(
+      "https://project-week7-client.onrender.com/categories"
+    );
     const data = await response.json();
 
     // set todoItems to be the response
@@ -60,19 +65,21 @@ export default function AddPost() {
   }
 
   return (
-    <div>
+    <div className="addPost">
       {/* <button onClick={preFillForm}>Prefill the Form</button> */}
-      <form onSubmit={handleSubmit}>
-        <label>Title</label>
+      <form className="formAddpost" onSubmit={handleSubmit}>
+        <label className="labelAddpost">Title</label>
         <input
+          className="inputAddpost"
           name="title"
           onChange={handleChange}
           value={form.title}
           required
         />
 
-        <label>content</label>
+        <label className="labelAddpost">content</label>
         <input
+          className="inputAddpost inputAddpostContent"
           name="content"
           type="text"
           onChange={handleChange}
@@ -80,8 +87,11 @@ export default function AddPost() {
           required
         />
 
-        <label htmlFor="categorySelector">Select a category:</label>
+        <label className="labelAddpost" htmlFor="categorySelector">
+          Select a category:
+        </label>
         <select
+          className="selectAddpost"
           name="category_id"
           onChange={handleChange}
           value={form.category_id}
@@ -95,9 +105,9 @@ export default function AddPost() {
           ))}
         </select>
 
-        <p>{passwordError}</p>
+        <p className="contentError">{contentError}</p>
 
-        <button>Add Post</button>
+        <button className="addPostSubmit">Add Post</button>
       </form>
     </div>
   );

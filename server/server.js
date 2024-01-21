@@ -57,6 +57,16 @@ app.post("/posts/:id/like", function (request, response) {
   );
   response.json(post);
 });
+app.post("/categories/addCategory", function (request, response) {
+  console.log(request.body);
+  const name = request.body.name;
+
+  const newCategory = db.query(
+    "INSERT INTO categories (name) VALUES ($1) RETURNING *",
+    [name]
+  );
+  response.json("RESPONSE");
+});
 app.delete("/posts/:id/delete", function (request, response) {
   const id = request.params.id;
   const post = db.query("DELETE FROM posts WHERE id = $1", [id]);

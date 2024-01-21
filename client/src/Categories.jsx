@@ -9,8 +9,9 @@ export default function Categories() {
   }, []);
 
   async function handleGetCategories() {
-    console.log("iam cold");
-    const response = await fetch("http://localhost:8080/categories");
+    const response = await fetch(
+      "https://project-week7-client.onrender.com/categories"
+    );
     const data = await response.json();
 
     // set todoItems to be the response
@@ -20,6 +21,8 @@ export default function Categories() {
   return (
     <div>
       <h1>Categories List</h1>
+      <Link to="/categories/addCategory">Add Category</Link>
+
       <ul>
         {categories.map((item) => {
           return (

@@ -8,43 +8,51 @@ export default function Posts() {
   }, []);
 
   async function handleGetPosts() {
-    const response = await fetch("http://localhost:8080/posts");
+    const response = await fetch(
+      "https://project-week7-client.onrender.com/posts"
+    );
     const data = await response.json();
 
     // set todoItems to be the response
     setPosts(data);
   }
   async function handleLike(id) {
-    await fetch(`http://localhost:8080/posts/${id}/like`, {
+    await fetch(`https://project-week7-client.onrender.com/posts/${id}/like`, {
       method: "POST",
     });
     handleGetPosts();
   }
   async function handleDelete(id) {
-    await fetch(`http://localhost:8080/posts/${id}/delete`, {
-      method: "DELETE",
-    });
+    await fetch(
+      `https://project-week7-client.onrender.com/posts/${id}/delete`,
+      {
+        method: "DELETE",
+      }
+    );
     handleGetPosts();
   }
 
   return (
-    <div>
+    <div className="post">
       <h1>Posts List</h1>
-      <ul>
+      <ul className="post">
         {Posts.map((item) => {
           return (
             <li key={item.id + item.title}>
               <h2>{item.title} :</h2>
-              <br /> {item.content}
-              {item.like_count}
+              <br />
+              <p> {item.content}</p>
+
               <button
+                className=" like-button buttons "
                 onClick={() => {
                   handleLike(item.id);
                 }}
               >
-                Like
+                {item.like_count} Likes
               </button>
               <button
+                className=" delete-button buttons"
                 onClick={() => {
                   handleDelete(item.id);
                 }}

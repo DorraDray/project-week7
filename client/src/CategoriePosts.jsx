@@ -10,7 +10,7 @@ export default function CategoriePosts() {
 
   async function handleGetCategoriePosts() {
     const response = await fetch(
-      `http://localhost:8080/categories/${categoryId}`
+      `https://project-week7-client.onrender.com/categories/${categoryId}`
     );
     const data = await response.json();
     console.log(data);
